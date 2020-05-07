@@ -1,4 +1,4 @@
-package com.qs.baselibrary
+package com.qs.baselibrary.ioc
 
 /**
  * Target：FUNCTION:作用于函数，方法

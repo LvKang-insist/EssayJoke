@@ -5,9 +5,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.view.View
 import android.widget.Toast
-import com.qs.baselibrary.CheckNet
-import com.qs.baselibrary.OnClick
-import com.qs.baselibrary.ViewById
 import java.lang.reflect.Method
 
 object ViewUtils {

@@ -1,2 +1,2 @@
-include ':app', ':baselibrary'
+include ':app', ':baselibrary', ':framelibrary'
 rootProject.name='EssayJoke'
