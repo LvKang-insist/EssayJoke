@@ -2,7 +2,9 @@ package com.qs.baselibrary.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.qs.baselibrary.ioc.ViewUtils
 
@@ -10,8 +12,14 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout())
-        ViewUtils.inject(this)
+//        setContentView(layout())
+
+        val view = LayoutInflater.from(this).inflate(layout(), null)
+        val decorView = window.decorView
+        val frameLayout = decorView.findViewById<FrameLayout>(android.R.id.content)
+        frameLayout.addView(view)
+
+        ViewUtils.inject(view,this)
 
         initTitle()
 

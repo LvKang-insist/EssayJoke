@@ -6,8 +6,9 @@ import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Environment
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatImageView
+import android.util.Log
+import android.widget.Button
+import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import com.qs.baselibrary.ioc.ViewById
 import com.qs.framelibrary.BaseSkinActivity
@@ -18,22 +19,23 @@ class MainActivity : BaseSkinActivity() {
 
 
     @ViewById(R.id.test_iv)
-    lateinit var mImageView: AppCompatImageView
+    lateinit var mImageView: ImageView
 
     @ViewById(R.id.test_btn)
-    lateinit var mBtnView: AppCompatButton
+    lateinit var mBtnView: Button
 
     override fun layout(): Int {
         return R.layout.activity_main
     }
 
     override fun initTitle() {
-resources
+
     }
 
     @SuppressLint("DiscouragedPrivateApi")
     override fun initView() {
         verifyStoragePermissions(this)
+        Log.e("------------", mImageView.toString())
         mBtnView.setOnClickListener {
             //读取本地 .skin 里面的资源
             val superRes = resources
