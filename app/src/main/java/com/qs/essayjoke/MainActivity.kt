@@ -7,6 +7,7 @@ import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat
@@ -34,6 +35,8 @@ class MainActivity : BaseSkinActivity() {
 
     @SuppressLint("DiscouragedPrivateApi")
     override fun initView() {
+
+        LayoutInflater.from(this).inflate(R.layout.activity_main,null,false) //2
         verifyStoragePermissions(this)
         Log.e("------------", mImageView.toString())
         mBtnView.setOnClickListener {
