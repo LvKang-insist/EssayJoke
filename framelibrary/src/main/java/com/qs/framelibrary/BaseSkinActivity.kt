@@ -16,7 +16,11 @@ import androidx.appcompat.widget.VectorEnabledTintResources
 import androidx.core.view.LayoutInflaterCompat
 import androidx.core.view.ViewCompat
 import com.qs.baselibrary.base.BaseActivity
+import com.qs.framelibrary.skin.SkinManager
+import com.qs.framelibrary.skin.attr.SkinAttr
+import com.qs.framelibrary.skin.attr.SkinView
 import com.qs.framelibrary.skin.support.SkinAppCompatViewInflater
+import com.qs.framelibrary.skin.support.SkinAttrSupport
 import org.xmlpull.v1.XmlPullParser
 
 /**
@@ -29,35 +33,52 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SkinManager.init(this)
         intercept()
         super.onCreate(savedInstanceState)
     }
 
     private fun intercept() {
         val layoutInflater = LayoutInflater.from(this)
-        LayoutInflaterCompat.setFactory2(layoutInflater, object :LayoutInflater.Factory2{
-            override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-                return onCreateView(null, name, context, attrs)
-            }
-
-            override fun onCreateView(
-                parent: View?, name: String, context: Context, attrs: AttributeSet
-            ): View? {
-                //创建 View
-                val view = createView(parent, name, context, attrs)
-                Log.e("BaseSkinActivity     ：", view.toString())
-
-                //解析属性 src  textColor background 自定义属性
-
-
-                //统一交给 SkinManager 管理
-
-                return view
-            }
-        })
+        LayoutInflaterCompat.setFactory2(layoutInflater, this)
     }
 
+    /**
+     * 拦截 View 的创建
+     */
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        return onCreateView(null, name, context, attrs)
+    }
 
+    override fun onCreateView(
+        parent: View?, name: String, context: Context, attrs: AttributeSet
+    ): View? {
+        //1，创建 View
+        val view = createView(parent, name, context, attrs)
+
+        //2，析属性 src  textColor background 自定义属性
+        //一个 activity 对应多个 SkinView
+        if (view != null) {
+            Log.e("BaseSkinActivity ->", name)
+            val skinAttrs: List<SkinAttr> = SkinAttrSupport.getSkinAttrs(context, attrs)
+            val skinView = SkinView(view, skinAttrs)
+            //3，统一交给 SkinManager 管理
+            managerSkinView(skinView)
+        }
+        return view
+    }
+
+    /**
+     * 统一管理 SkinView
+     */
+    private fun managerSkinView(skinView: SkinView) {
+        var skinViews = SkinManager.getSkinViews(this)
+        if (skinViews == null) {
+            skinViews = mutableListOf()
+            SkinManager.register(this, skinViews)
+        }
+        skinViews.add(skinView)
+    }
 
 
     /**
@@ -69,7 +90,7 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
     @SuppressLint("Recycle", "PrivateResource")
     private fun createView(
         parent: View?, name: String, @NonNull context: Context, @NonNull attrs: AttributeSet
-    ): View {
+    ): View? {
         if (mAppCompatViewInflater == null) {
             val a = context.obtainStyledAttributes(R.styleable.AppCompatTheme)
             val viewInflaterClassName = a.getString(R.styleable.AppCompatTheme_viewInflaterClass)
@@ -101,7 +122,6 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
                 shouldInheritContext(parent as ViewParent)// If we have a XmlPullParser, we can detect where we are in the layout
             // Otherwise we have to use the old heuristic
         }
-
         return mAppCompatViewInflater!!.createView(
             parent, name, context, attrs, inheritContext,
             IS_PRE_LOLLIPOP, /* Only read android:theme pre-L (L+ handles this anyway) */

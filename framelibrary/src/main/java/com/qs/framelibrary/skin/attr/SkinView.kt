@@ -1,15 +1,17 @@
 package com.qs.framelibrary.skin.attr
 
+import android.util.Log
 import android.view.View
 
-class SkinView {
-    private lateinit var mView: View
-
-    private var mAttrs: MutableList<SkinAttr>? = null
+class SkinView(
+    private val view: View,
+    private val skinAttrs: List<SkinAttr>
+) {
 
     fun skin() {
-        mAttrs?.forEach {
-            it.skin(mView)
+        Log.e("SkinType ", "${skinAttrs.size}")
+        skinAttrs.forEach {
+            it.skin(view)
         }
     }
 

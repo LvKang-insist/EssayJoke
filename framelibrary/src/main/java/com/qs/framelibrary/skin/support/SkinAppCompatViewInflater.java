@@ -26,6 +26,7 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.AppCompatToggleButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.TintContextWrapper;
 import androidx.collection.ArrayMap;
 import androidx.core.view.ViewCompat;
@@ -135,6 +136,10 @@ public class SkinAppCompatViewInflater {
                 view = createToggleButton(context, attrs);
                 verifyNotNull(view, name);
                 break;
+            case "LinearLayout":
+                view = createLinearLayout(context, attrs);
+                verifyNotNull(view, name);
+                break;
             default:
                 // The fallback that allows extending class to take over view inflation
                 // for other tags. Note that we don't check that the result is not-null.
@@ -151,13 +156,18 @@ public class SkinAppCompatViewInflater {
         }
 
 
-
         if (view != null) {
             // If we have created a view, check its android:onClick
             checkOnClickListener(view, attrs);
         }
-        Log.e("0000000", "--------------" + view.toString());
+
+
         return view;
+    }
+
+    @NonNull
+    protected View createLinearLayout(Context context, AttributeSet attrs) {
+        return new LinearLayoutCompat(context, attrs);
     }
 
     @NonNull
