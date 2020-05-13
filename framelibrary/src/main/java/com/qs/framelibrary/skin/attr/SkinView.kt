@@ -1,6 +1,5 @@
 package com.qs.framelibrary.skin.attr
 
-import android.util.Log
 import android.view.View
 
 class SkinView(
@@ -9,7 +8,6 @@ class SkinView(
 ) {
 
     fun skin() {
-        Log.e("SkinType ", "${skinAttrs.size}")
         skinAttrs.forEach {
             it.skin(view)
         }

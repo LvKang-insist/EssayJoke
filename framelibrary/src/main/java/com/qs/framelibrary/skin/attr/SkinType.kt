@@ -1,8 +1,7 @@
 package com.qs.framelibrary.skin.attr
 
-import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
@@ -23,11 +22,10 @@ enum class SkinType(val resName: String) {
         }
     },
     BACKGROUND("background") {
-        @SuppressLint("NewApi")
+        @TargetApi(Build.VERSION_CODES.M)
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
         override fun skin(view: View, resName: String) {
             //背景可能是图片，也可能是颜色
-            Log.e("-----------",resName)
             val skinResource = getSkinResource()
             val drawable = skinResource.getDrawableByName(resName)
             if (drawable != null) {

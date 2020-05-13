@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import com.qs.baselibrary.ioc.OnClick
 import com.qs.framelibrary.BaseSkinActivity
 import com.qs.framelibrary.skin.SkinManager
+import com.qs.framelibrary.skin.SkinResource
 import java.io.File
 
 
@@ -22,7 +23,6 @@ class MainActivity : BaseSkinActivity() {
 
     @OnClick([R.id.test_btn])
     fun onBtn(view: View) {
-        Toast.makeText(this, "换", Toast.LENGTH_LONG).show()
         val skinPath =
             Environment.getExternalStorageDirectory().absolutePath + File.separator + "red.skin"
         val result: Int = SkinManager.loadSkin(skinPath)
@@ -38,6 +38,10 @@ class MainActivity : BaseSkinActivity() {
     fun onStart(view: View) {
         //跳转
         startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    override fun changeSkin(skinResource: SkinResource) {
+        Toast.makeText(this, "换", Toast.LENGTH_LONG).show()
     }
 
 

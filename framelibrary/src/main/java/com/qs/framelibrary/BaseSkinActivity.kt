@@ -17,8 +17,10 @@ import androidx.core.view.LayoutInflaterCompat
 import androidx.core.view.ViewCompat
 import com.qs.baselibrary.base.BaseActivity
 import com.qs.framelibrary.skin.SkinManager
+import com.qs.framelibrary.skin.SkinResource
 import com.qs.framelibrary.skin.attr.SkinAttr
 import com.qs.framelibrary.skin.attr.SkinView
+import com.qs.framelibrary.skin.callback.ISkinChangeListener
 import com.qs.framelibrary.skin.support.SkinAppCompatViewInflater
 import com.qs.framelibrary.skin.support.SkinAttrSupport
 import org.xmlpull.v1.XmlPullParser
@@ -26,10 +28,11 @@ import org.xmlpull.v1.XmlPullParser
 /**
  * 插件换肤
  */
-abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
+abstract class BaseSkinActivity : BaseActivity(),
+    LayoutInflater.Factory2, ISkinChangeListener {
 
     private var mAppCompatViewInflater: SkinAppCompatViewInflater? = null
-    private val IS_PRE_LOLLIPOP = Build.VERSION.SDK_INT < 21
+    private val lollipop = Build.VERSION.SDK_INT < 21
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +67,8 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
             val skinView = SkinView(view, skinAttrs)
             //3，统一交给 SkinManager 管理
             managerSkinView(skinView)
+            //4，判断需不需要换肤
+            SkinManager.checkChangeSkin(skinView)
         }
         return view
     }
@@ -81,13 +86,14 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
     }
 
 
+
     /**
      * 因为创建 View 需要进行兼容，所以这里直接 copy 系统源码
      * 下面代码都是 AppCompatDelegateImpl 中的
      * AppCompatDelegateImpl 中拦截了 View ，进行了兼容
      * 这里直接 copy 过来使用
      */
-    @SuppressLint("Recycle", "PrivateResource")
+    @SuppressLint("Recycle", "PrivateResource", "RestrictedApi")
     private fun createView(
         parent: View?, name: String, @NonNull context: Context, @NonNull attrs: AttributeSet
     ): View? {
@@ -115,7 +121,7 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
         }
 
         var inheritContext = false
-        if (IS_PRE_LOLLIPOP) {
+        if (lollipop) {
             inheritContext = if (attrs is XmlPullParser)
                 (attrs as XmlPullParser).depth > 1
             else
@@ -124,7 +130,7 @@ abstract class BaseSkinActivity : BaseActivity(), LayoutInflater.Factory2 {
         }
         return mAppCompatViewInflater!!.createView(
             parent, name, context, attrs, inheritContext,
-            IS_PRE_LOLLIPOP, /* Only read android:theme pre-L (L+ handles this anyway) */
+            lollipop, /* Only read android:theme pre-L (L+ handles this anyway) */
             true, /* Read read app:theme as a fallback at all times for legacy reasons */
             VectorEnabledTintResources.shouldBeUsed() /* Only tint wrap the context if enabled */
         )

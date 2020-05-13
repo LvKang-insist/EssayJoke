@@ -3,6 +3,7 @@ package com.qs.framelibrary.skin.support
 import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import com.qs.framelibrary.skin.attr.SkinAttr
 import com.qs.framelibrary.skin.attr.SkinType
 
@@ -31,7 +32,7 @@ class SkinAttrSupport {
                     if (TextUtils.isEmpty(resName)) {
                         continue
                     } else {
-//                        Log.e("name", attrName)
+                        Log.e("name", attrName)
                         val skinAttr = SkinAttr(resName!!, skinType)
                         skinAttrs.add(skinAttr)
                     }

@@ -8,7 +8,6 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 
 /**
@@ -58,7 +57,6 @@ class SkinResource(private val context: Context, private val skinPath: String) {
     fun getColorByName(resName: String): ColorStateList? {
         return tryCatch {
             val resId = mSkinResource!!.getIdentifier(resName, "color", mPackageName)
-            Log.e("------", "$resId")
             mSkinResource!!.getColorStateList(resId, null)
         }
     }
