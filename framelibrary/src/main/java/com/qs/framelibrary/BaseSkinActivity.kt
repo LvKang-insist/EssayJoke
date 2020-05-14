@@ -86,6 +86,11 @@ abstract class BaseSkinActivity : BaseActivity(),
     }
 
 
+    override fun onDestroy() {
+        SkinManager.unregister(this)
+        super.onDestroy()
+    }
+
 
     /**
      * 因为创建 View 需要进行兼容，所以这里直接 copy 系统源码
@@ -105,16 +110,16 @@ abstract class BaseSkinActivity : BaseActivity(),
                 // create the base inflater (no reflection)
                 mAppCompatViewInflater = SkinAppCompatViewInflater()
             } else {
-                try {
+                mAppCompatViewInflater = try {
                     val viewInflaterClass = Class.forName(viewInflaterClassName)
-                    mAppCompatViewInflater = viewInflaterClass.getDeclaredConstructor()
+                    viewInflaterClass.getDeclaredConstructor()
                         .newInstance() as SkinAppCompatViewInflater
                 } catch (t: Throwable) {
                     Log.i(
                         "BaseSkinActivity", "Failed to instantiate custom view inflater "
                                 + viewInflaterClassName + ". Falling back to default.", t
                     )
-                    mAppCompatViewInflater = SkinAppCompatViewInflater()
+                    SkinAppCompatViewInflater()
                 }
 
             }

@@ -9,9 +9,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.qs.baselibrary.ioc.OnClick
+import com.qs.essayjoke.server.UserService
 import com.qs.framelibrary.BaseSkinActivity
 import com.qs.framelibrary.skin.SkinManager
 import com.qs.framelibrary.skin.SkinResource
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 
@@ -40,6 +42,7 @@ class MainActivity : BaseSkinActivity() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 
+
     override fun changeSkin(skinResource: SkinResource) {
         Toast.makeText(this, "换", Toast.LENGTH_LONG).show()
     }
@@ -59,7 +62,10 @@ class MainActivity : BaseSkinActivity() {
 
 
     override fun initData() {
-
+        start_service.setOnClickListener {
+            startService(Intent(this, UserService::class.java))
+            Toast.makeText(this, "启动成功", Toast.LENGTH_LONG).show()
+        }
     }
 
     private val REQUEST_EXTERNAL_STORAGE = 1

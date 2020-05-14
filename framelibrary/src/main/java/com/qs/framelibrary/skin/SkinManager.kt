@@ -52,7 +52,7 @@ object SkinManager {
         checkSkin()
         //保存皮肤的状态
         saveSkinStatus(skinPath)
-        return 0
+        return SkinConfig.SKIN_CHANGE_SUCCESS
     }
 
     /**
@@ -158,6 +158,10 @@ object SkinManager {
      */
     fun getSkinResource(): SkinResource {
         return skinResource!!
+    }
+
+    fun unregister(changeListener: ISkinChangeListener) {
+        mSkinViews.remove(changeListener)
     }
 
 

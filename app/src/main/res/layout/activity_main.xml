@@ -14,8 +14,7 @@
         android:onClick="skin"
         android:padding="10dp"
         android:text="换肤"
-        android:textColor="@color/main_bg_color"
-        android:background="@color/main_bg_color"/>
+        android:textColor="@color/main_bg_color" />
 
 
     <Button
@@ -34,10 +33,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:onClick="skin2"
         android:padding="10dp"
         android:text="跳转"
         android:textColor="@color/main_bg_color" />
+
+
+    <Button
+        android:id="@+id/start_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="开启服务"
+        android:textColor="@color/main_bg_color" />
+
 
     <ImageView
         android:id="@+id/test_iv"

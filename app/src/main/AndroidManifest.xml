@@ -25,6 +25,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <service android:name=".server.UserService"
+            android:process="com.ryg.chapter_2.remote">
+            <intent-filter>
+                <action android:name="com.qs.essayjoke.UserServcie" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
