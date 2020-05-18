@@ -1,15 +1,16 @@
 package com.qs.essayjoke
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Environment
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.app.ActivityCompat
+import com.qs.baselibrary.dialog.ToastDialog
+import com.qs.baselibrary.dialog.base.FastDialog
 import com.qs.baselibrary.ioc.OnClick
-import com.qs.essayjoke.server.UserService
 import com.qs.framelibrary.BaseSkinActivity
 import com.qs.framelibrary.skin.SkinManager
 import com.qs.framelibrary.skin.SkinResource
@@ -18,9 +19,6 @@ import java.io.File
 
 
 class MainActivity : BaseSkinActivity() {
-
-
-    @SuppressLint("DiscouragedPrivateApi")
 
 
     @OnClick([R.id.test_btn])
@@ -62,9 +60,22 @@ class MainActivity : BaseSkinActivity() {
 
 
     override fun initData() {
+//        ToastDialog.init(this)
         start_service.setOnClickListener {
-            startService(Intent(this, UserService::class.java))
-            Toast.makeText(this, "启动成功", Toast.LENGTH_LONG).show()
+//            startService(Intent(this, UserService::class.java))
+            /* val dialog = FastDialog.Builder(this)
+                 .setContentView(R.layout.dialog)
+                 .setText(R.id.dialog_text, "发送")
+                 .setWidth(0.7f)
+                 .setAlpha(0.6f)
+                 .addDefaultAnimation()
+                 .show()
+             val edit = dialog.getView<AppCompatEditText>(R.id.dialog_edit)
+             dialog.setOnClickListener(R.id.dialog_text) { _, alertDialog ->
+                 alertDialog.dismiss()
+                 Toast.makeText(this, edit?.text.toString(), Toast.LENGTH_LONG).show()
+             }*/
+//            ToastDialog.loading()
         }
     }
 
