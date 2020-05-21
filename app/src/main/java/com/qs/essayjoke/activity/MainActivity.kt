@@ -6,7 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Environment
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.app.ActivityCompat
+import com.qs.baselibrary.dialog.ToastDialog
+import com.qs.baselibrary.dialog.base.FastDialog
 import com.qs.baselibrary.ioc.OnClick
 import com.qs.essayjoke.R
 import com.qs.framelibrary.BaseSkinActivity
@@ -58,52 +61,47 @@ class MainActivity : BaseSkinActivity() {
 
 
     override fun initData() {
-//        ToastDialog.init(this)
-        start_service.setOnClickListener {
-//            startService(Intent(this, UserService::class.java))
-            /* val dialog = FastDialog.Builder(this)
-                 .setContentView(R.layout.dialog)
-                 .setText(R.id.dialog_text, "发送")
-                 .setWidth(0.7f)
-                 .setAlpha(0.6f)
-                 .addDefaultAnimation()
-                 .show()
-             val edit = dialog.getView<AppCompatEditText>(R.id.dialog_edit)
-             dialog.setOnClickListener(R.id.dialog_text) { _, alertDialog ->
-                 alertDialog.dismiss()
-                 Toast.makeText(this, edit?.text.toString(), Toast.LENGTH_LONG).show()
-             }*/
-//            ToastDialog.loading()
+        val dialog = FastDialog.Builder(this)
+            .setContentView(R.layout.dialog)
+            .setText(R.id.dialog_text, "发送")
+            .setWidth(0.7f)
+            .show()
+
+        val edit = dialog.getView<AppCompatEditText>(R.id.dialog_edit)
+        dialog.setOnClickListener(R.id.dialog_text) {
+            dialog.dismiss()
+            Toast.makeText(this, edit?.text.toString(), Toast.LENGTH_LONG).show()
         }
+        ToastDialog.warn(this)
     }
+}
 
-    private val REQUEST_EXTERNAL_STORAGE = 1
-    private val PERMISSIONS_STORAGE = arrayOf(
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
-    )
+private val REQUEST_EXTERNAL_STORAGE = 1
+private val PERMISSIONS_STORAGE = arrayOf(
+    "android.permission.READ_EXTERNAL_STORAGE",
+    "android.permission.WRITE_EXTERNAL_STORAGE"
+)
 
 
-    fun verifyStoragePermissions(activity: Activity) {
+fun verifyStoragePermissions(activity: Activity) {
 
-        try {
-            //检测是否有写的权限
-            val permission = ActivityCompat.checkSelfPermission(
+    try {
+        //检测是否有写的权限
+        val permission = ActivityCompat.checkSelfPermission(
+            activity,
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+        )
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // 没有写的权限，去申请写的权限，会弹出对话框
+            ActivityCompat.requestPermissions(
                 activity,
-                "android.permission.WRITE_EXTERNAL_STORAGE"
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
             )
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // 没有写的权限，去申请写的权限，会弹出对话框
-                ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
-
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 
 }
+

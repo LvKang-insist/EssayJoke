@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
  */
 class FastDialog(context: Context, themeResId: Int) : Dialog(context, themeResId) {
 
-    private val mAlert = AlertController(this, window)
+    private val mAlert = FastController(this, window)
 
     /**
      * 设置文本
@@ -27,7 +27,7 @@ class FastDialog(context: Context, themeResId: Int) : Dialog(context, themeResId
     /**
      * 设置事件
      */
-    fun setOnClickListener(viewId: Int, listener: (View, FastDialog) -> Unit) {
+    fun setOnClickListener(viewId: Int, listener: (Pair<View, FastDialog>) -> Unit) {
         mAlert.setOnClickListener(viewId, WeakReference(listener))
     }
 
@@ -44,13 +44,13 @@ class FastDialog(context: Context, themeResId: Int) : Dialog(context, themeResId
      */
     class Builder {
 
-        private var p: AlertController.AlertParams
+        private var p: FastController.AlertParams
         private var fastDialog: FastDialog? = null
 
         constructor(context: Context) : this(context, R.style.dialog)
 
         constructor(context: Context, themeResId: Int) {
-            p = AlertController.AlertParams(context, themeResId)
+            p = FastController.AlertParams(context, themeResId)
         }
 
 
@@ -181,7 +181,7 @@ class FastDialog(context: Context, themeResId: Int) : Dialog(context, themeResId
         /**
          * 设置点击事件
          */
-        fun setOnClickListener(viewId: Int, listener: (View, FastDialog?) -> Unit): Builder {
+        fun setOnClickListener(viewId: Int, listener: (Pair<View, FastDialog>) -> Unit): Builder {
             p.mClickArray.put(viewId, WeakReference(listener))
             return this
         }

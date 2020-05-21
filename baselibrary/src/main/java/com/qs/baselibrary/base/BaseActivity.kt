@@ -19,6 +19,7 @@ abstract class BaseActivity : AppCompatActivity() {
         initView()
 
         initData()
+
     }
 
     abstract fun layout(): Int

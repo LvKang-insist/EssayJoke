@@ -1,68 +1,77 @@
 package com.qs.baselibrary.dialog
 
-import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.view.View
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import com.qs.baselibrary.R
-import com.qs.baselibrary.base.BaseApplication
 import com.qs.baselibrary.dialog.base.FastDialog
-import java.lang.ref.WeakReference
-
 
 object ToastDialog {
 
-    lateinit var weakReference: WeakReference<Activity>
 
-    private val fastDialog by lazy {
-        FastDialog.Builder(weakReference.get()!!)
+    private var fastDialog: FastDialog? = null
+
+    private fun createDialog(context: Context) {
+        fastDialog = FastDialog.Builder(context)
             .setContentView(R.layout.toast_dialog)
             .setAlpha(1f)
             .build()
+        fastDialog?.setOnDismissListener {
+            fastDialog = null
+        }
     }
 
-
-    fun loading() {
-        fastDialog.setText(R.id.tv_toast_message, "加载中")
-        fastDialog.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.GONE
-        fastDialog.getView<ProgressView>(R.id.pw_progress)?.visibility = View.VISIBLE
-        fastDialog.show()
+    fun loading(context: Context) {
+        createDialog(context)
+        fastDialog?.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.GONE
+        fastDialog?.getView<ProgressView>(R.id.pw_progress)?.visibility = View.VISIBLE
+        fastDialog?.setText(R.id.tv_toast_message, "加载中")
+        fastDialog?.show()
     }
 
-    fun unLoading() {
-        fastDialog.dismiss()
-    }
-
-    fun error() {
+    fun error(context: Context) {
+        createDialog(context)
         show("错误", R.drawable.ic_dialog_error)
     }
 
-    fun warn() {
+    fun warn(context: Context) {
+        createDialog(context)
         show("警告", R.drawable.ic_dialog_warning)
     }
 
-    fun finish() {
+    fun finish(context: Context) {
+        createDialog(context)
         show("完成", R.drawable.ic_dialog_finish)
     }
 
-    private fun hideLoad() {
-        fastDialog.getView<ProgressView>(R.id.pw_progress)?.visibility = View.GONE
-        fastDialog.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.VISIBLE
+
+    fun unLoading() {
+        fastDialog?.dismiss()
     }
 
-    fun show(text: String) {
-        fastDialog.setText(R.id.tv_toast_message, text)
-        fastDialog.getView<ProgressView>(R.id.pw_progress)?.visibility = View.GONE
-        fastDialog.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.GONE
-        fastDialog.show()
+    fun show(context: Context, text: String) {
+        createDialog(context)
+        fastDialog?.getView<ProgressView>(R.id.pw_progress)?.visibility = View.GONE
+        fastDialog?.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.GONE
+        fastDialog?.setText(R.id.tv_toast_message, text)
+        fastDialog?.show()
     }
 
     private fun show(text: String, imageResId: Int) {
         hideLoad()
-        fastDialog.setText(R.id.tv_toast_message, text)
-        fastDialog.getView<AppCompatImageView>(R.id.iv_toast_icon)
+        fastDialog?.getView<AppCompatImageView>(R.id.iv_toast_icon)
             ?.setBackgroundResource(imageResId)
-        fastDialog.show()
+        fastDialog?.setText(R.id.tv_toast_message, text)
+        fastDialog?.show()
     }
 
+
+    private fun hideLoad() {
+        fastDialog?.getView<ProgressView>(R.id.pw_progress)?.visibility = View.GONE
+        fastDialog?.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.VISIBLE
+    }
 
 }

@@ -35,12 +35,12 @@ class DialogViewHelper() {
      */
     fun setOnClickListener(
         viewId: Int,
-        onClick: WeakReference<(View, FastDialog) -> Unit>,
+        onClick: WeakReference<(Pair<View, FastDialog>) -> Unit>,
         alertDialog: FastDialog
     ) {
         getView<View>(viewId)?.setOnClickListener {
-            val parent: ((View, FastDialog) -> Unit)? = onClick.get()
-            if (parent != null) parent(it, alertDialog)
+            val parent: ((Pair<View, FastDialog>) -> Unit)? = onClick.get()
+            if (parent != null) parent(Pair(it,alertDialog))
         }
     }
 

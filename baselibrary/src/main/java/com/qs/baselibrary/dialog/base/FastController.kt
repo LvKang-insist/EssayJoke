@@ -1,18 +1,14 @@
 package com.qs.baselibrary.dialog.base
 
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Point
 import android.util.SparseArray
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import androidx.core.util.forEach
 import java.lang.IllegalArgumentException
 import java.lang.ref.WeakReference
 
-class AlertController(
+class FastController(
     private val alertDialog: FastDialog,
     private val window: Window?
 ) {
@@ -44,8 +40,8 @@ class AlertController(
     /**
      * 设置事件
      */
-    fun setOnClickListener(viewId: Int, onClick: WeakReference<(View, FastDialog) -> Unit>) {
-        viewHelper?.setOnClickListener(viewId, onClick,alertDialog)
+    fun setOnClickListener(viewId: Int, onClick: WeakReference<(Pair<View, FastDialog>) -> Unit>) {
+        viewHelper?.setOnClickListener(viewId, onClick, alertDialog)
     }
 
     /**
@@ -71,7 +67,7 @@ class AlertController(
         var mTextArray = SparseArray<CharSequence>()
 
         //存放点击事件
-        var mClickArray = SparseArray<WeakReference<(View, FastDialog) -> Unit>>()
+        var mClickArray = SparseArray<WeakReference<(Pair<View, FastDialog>) -> Unit>>()
 
         //宽度
         var mWidth: Int = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -98,7 +94,7 @@ class AlertController(
         /**
          * 绑定和设置参数
          */
-        fun apply(alert: AlertController) {
+        fun apply(fast: FastController) {
             //设置布局
             var viewHelper: DialogViewHelper? = null
             if (mViewLayoutResId != 0) {
@@ -114,35 +110,35 @@ class AlertController(
             if (viewHelper == null) {
                 throw IllegalArgumentException("未调用 setContentView")
             } else {
-                alert.viewHelper = viewHelper
+                fast.viewHelper = viewHelper
             }
 
             //给 dialog 设置布局
-            alert.getDialog().setContentView(viewHelper.mContentView)
+            fast.getDialog().setContentView(viewHelper.mContentView)
 
             //设置文本
             mTextArray.forEach { key, value ->
-                alert.setText(key, value)
+                fast.setText(key, value)
             }
             //设置点击事件
             mClickArray.forEach { key, value ->
-                alert.setOnClickListener(key, value)
+                fast.setOnClickListener(key, value)
             }
 
             //配置参数
-            val window = alert.window
+            val window = fast.window
             if (window != null) {
                 window.setGravity(mGravity)
                 if (mAnimations != 0) window.setWindowAnimations(mAnimations)
                 val params = window.attributes
                 params.alpha = mAlpha
                 if (mPercentWidth != -1f) {
-                    params.width = (getScreenWidth(alert.window) * mPercentWidth).toInt()
+                    params.width = (getScreenWidth(fast.window) * mPercentWidth).toInt()
                 } else {
                     params.width = mWidth
                 }
                 if (mPercentHeight != -1f) {
-                    params.height = (getScreenHeight(alert.window) * mPercentHeight).toInt()
+                    params.height = (getScreenHeight(fast.window) * mPercentHeight).toInt()
                 } else {
                     params.height = mHeight
                 }

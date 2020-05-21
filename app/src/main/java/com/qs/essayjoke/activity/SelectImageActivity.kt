@@ -1,9 +1,16 @@
 package com.qs.essayjoke.activity
 
+import android.content.ContentUris
+import android.content.ContentValues
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +27,8 @@ import com.qs.baselibrary.dialog.ToastDialog
 import com.qs.essayjoke.R
 import com.qs.framelibrary.BaseSkinActivity
 import kotlinx.android.synthetic.main.activity_image_selector.*
+import kotlinx.android.synthetic.main.media_chooser_item.*
+import java.net.URI
 
 
 class SelectImageActivity : BaseSkinActivity() {
@@ -63,8 +72,12 @@ class SelectImageActivity : BaseSkinActivity() {
     var mMaxCount = 8
 
     // List 选择好的图片列表
-    var mResultList: ArrayList<String>? = null
+    var mResultList: ArrayList<Uri?>? = null
 
+
+    private val selectImageListAdapter by lazy {
+        SelectImageListAdapter(mResultList!!)
+    }
 
     override fun initData() {
         // 1.获取传递过来的参数
@@ -72,10 +85,15 @@ class SelectImageActivity : BaseSkinActivity() {
         mMode = intent.getIntExtra(EXTRA_SELECT_MODE, mMode)
         mMaxCount = intent.getIntExtra(EXTRA_SELECT_COUNT, mMaxCount)
         mShowCamera = intent.getBooleanExtra(EXTRA_SHOW_CAMERA, mShowCamera)
-        mResultList = intent.getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST)
+        mResultList = intent.getParcelableArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST)
+
         if (mResultList == null) {
             mResultList = ArrayList()
         }
+
+        image_list_rv.layoutManager = GridLayoutManager(this, 4)
+        image_list_rv.adapter = selectImageListAdapter
+
 
         // 2.初始化本地图片数据
         initImageList()
@@ -119,20 +137,20 @@ class SelectImageActivity : BaseSkinActivity() {
             override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
                 //解析：封装到集合中
                 if (data != null && data.count > 0) {
-                    val images: ArrayList<String> = ArrayList()
-                    // 如果需要显示拍照，就在第一个位置上加一个空String
+                    val images = ArrayList<Uri?>()
+                    // 只保存路径
                     if (mShowCamera) {
-                        images.add("")
+                        images.add(null)
                     }
                     // 不断的遍历循环
                     while (data.moveToNext()) {
-                        // 只保存路径
-                        val path: String = data.getString(
-                            data.getColumnIndexOrThrow(
-                                IMAGE_PROJECTION[0]
-                            )
+                        val id =
+                            data.getLong(data.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
+                        val url = ContentUris.withAppendedId(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id
                         )
-                        images.add(path)
+                        images.add(url)
+                        Log.e("$url -- >", "${url.path}")
                     }
                     // 显示列表数据
                     showImageList(images)
@@ -149,12 +167,14 @@ class SelectImageActivity : BaseSkinActivity() {
      * 3.展示获取到的图片显示到列表
      * @param images
      */
-    private fun showImageList(images: ArrayList<String>) {
-//        ToastDialog.show(
-        Toast.makeText(this, "${images.size}", Toast.LENGTH_LONG).show()
-        val listAdapter = SelectImageListAdapter(images)
-        image_list_rv.layoutManager = GridLayoutManager(this, 4)
-        image_list_rv.adapter = listAdapter
+    private fun showImageList(images: ArrayList<Uri?>) {
+        mResultList?.clear()
+        mResultList?.addAll(images)
+        selectImageListAdapter.notifyDataSetChanged()
+    }
+
+    override fun initView() {
+
     }
 
 
@@ -166,11 +186,29 @@ class SelectImageActivity : BaseSkinActivity() {
 
     }
 
-    override fun initView() {
 
+    fun addBitmapToAlbum(bitmap: Bitmap, displayName: String, mimeType: String, compressFormat: Bitmap.CompressFormat) {
+        val values = ContentValues()
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM)
+        } else {
+            values.put(MediaStore.MediaColumns.DATA, "${Environment.getExternalStorageDirectory().path}/${Environment.DIRECTORY_DCIM}/$displayName")
+        }
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+//        val openFile = contentResolver.openFile()
+        if (uri != null) {
+            val outputStream = contentResolver.openOutputStream(uri)
+            if (outputStream != null) {
+                bitmap.compress(compressFormat, 100, outputStream)
+                outputStream.close()
+            }
+        }
     }
 
-    class SelectImageListAdapter(val images: ArrayList<String>) :
+
+    class SelectImageListAdapter(val images: ArrayList<Uri?>) :
         RecyclerView.Adapter<SelectImageListAdapter.ViewHolder>() {
 
         class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -192,7 +230,7 @@ class SelectImageActivity : BaseSkinActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val path = images.get(position)
-            if (TextUtils.isEmpty(path)) {
+            if (path == null) {
                 holder.mask.visibility = View.VISIBLE
                 holder.camera_ll.visibility = View.VISIBLE
                 holder.image.visibility = View.GONE
