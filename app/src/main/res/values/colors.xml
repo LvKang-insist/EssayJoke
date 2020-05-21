@@ -5,4 +5,24 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="main_btn">#000000</color>
+
+
+    <color name="comment_dialog_bg">#fff5f0ec</color>
+    <color name="comment_dialog_content_text">#ff5c6266</color>
+    <color name="list_item_divider">#ffe6e6e6</color>
+    <color name="comment_dialog_share_text">#ff333333</color>
+    <color name="comment_dialog_submit_text">#ffffffff</color>
+
+    <color name="main_bg_color">#2F2FFF</color>
+    <color name="main_text_color">#FFFFFF</color>
+
+
+    <color name="media_choose_item_shadow">#cc000000</color>
+    <color name="media_choose_op_btn_disabled">#ffffffff</color>
+    <color name="media_choose_op_btn_enabled">#ffff819f</color>
+    <color name="media_preview_mask_color">#ff000000</color>
+    <color name="media_step_progress_bg">#80333333</color>
+    <color name="media_step_progress_color">#ffff819f</color>
+    <color name="media_video_record_black">#ff000000</color>
+
 </resources>

@@ -91,6 +91,10 @@ abstract class BaseSkinActivity : BaseActivity(),
         super.onDestroy()
     }
 
+    override fun changeSkin(skinResource: SkinResource) {
+
+    }
+
 
     /**
      * 因为创建 View 需要进行兼容，所以这里直接 copy 系统源码

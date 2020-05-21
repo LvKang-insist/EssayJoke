@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,8 @@
         </activity>
 
 
-        <service android:name=".server.UserService"
+        <service
+            android:name=".server.UserService"
             android:process="com.ryg.chapter_2.remote">
             <intent-filter>
                 <action android:name="com.qs.essayjoke.UserServcie" />
@@ -35,6 +36,8 @@
             </intent-filter>
         </service>
 
+
+        <activity android:name=".activity.SelectImageActivity" />
     </application>
 
 </manifest>

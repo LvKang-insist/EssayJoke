@@ -49,6 +49,13 @@ object ToastDialog {
         fastDialog.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.VISIBLE
     }
 
+    fun show(text: String) {
+        fastDialog.setText(R.id.tv_toast_message, text)
+        fastDialog.getView<ProgressView>(R.id.pw_progress)?.visibility = View.GONE
+        fastDialog.getView<AppCompatImageView>(R.id.iv_toast_icon)?.visibility = View.GONE
+        fastDialog.show()
+    }
+
     private fun show(text: String, imageResId: Int) {
         hideLoad()
         fastDialog.setText(R.id.tv_toast_message, text)

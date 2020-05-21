@@ -1,4 +1,4 @@
-package com.qs.essayjoke
+package com.qs.essayjoke.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -6,11 +6,9 @@ import android.content.pm.PackageManager
 import android.os.Environment
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.app.ActivityCompat
-import com.qs.baselibrary.dialog.ToastDialog
-import com.qs.baselibrary.dialog.base.FastDialog
 import com.qs.baselibrary.ioc.OnClick
+import com.qs.essayjoke.R
 import com.qs.framelibrary.BaseSkinActivity
 import com.qs.framelibrary.skin.SkinManager
 import com.qs.framelibrary.skin.SkinResource
