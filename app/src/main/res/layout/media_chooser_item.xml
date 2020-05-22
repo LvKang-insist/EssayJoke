@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qs.essayjoke.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="90dp">
+    android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.qs.essayjoke.SquareImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
     <View
         android:id="@+id/mask"
@@ -21,7 +21,6 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="right"
-
         android:src="@drawable/media_chooser_ic" />
 
 
@@ -33,7 +32,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.qs.essayjoke.SquareImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_media_chooser_take_picture" />
@@ -42,11 +41,11 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:paddingTop="5dp"
             android:gravity="center_horizontal"
+            android:paddingTop="5dp"
             android:text="拍照"
             android:textColor="#CDCECE"
             android:textSize="14sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</FrameLayout>
+</com.qs.essayjoke.SquareFrameLayout>
