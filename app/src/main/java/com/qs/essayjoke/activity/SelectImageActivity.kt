@@ -1,15 +1,13 @@
 package com.qs.essayjoke.activity
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentUris
-import android.content.ContentValues
+import android.content.Intent
 import android.database.Cursor
-import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,12 +21,9 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.qs.baselibrary.dialog.ToastDialog
 import com.qs.essayjoke.R
 import com.qs.framelibrary.BaseSkinActivity
 import kotlinx.android.synthetic.main.activity_image_selector.*
-import kotlinx.android.synthetic.main.media_chooser_item.*
-import java.net.URI
 
 
 class SelectImageActivity : BaseSkinActivity() {
@@ -75,9 +70,7 @@ class SelectImageActivity : BaseSkinActivity() {
     var mResultList: ArrayList<Uri?>? = null
 
 
-    private val selectImageListAdapter by lazy {
-        SelectImageListAdapter(mResultList!!)
-    }
+    private var selectImageListAdapter: SelectImageListAdapter? = null
 
     override fun initData() {
         // 1.获取传递过来的参数
@@ -91,19 +84,38 @@ class SelectImageActivity : BaseSkinActivity() {
             mResultList = ArrayList()
         }
 
-        image_list_rv.layoutManager = GridLayoutManager(this, 4)
-        image_list_rv.adapter = selectImageListAdapter
-
 
         // 2.初始化本地图片数据
         initImageList()
 
+        //改变显示
+        exchangViewShow()
+
+        select_finish.setOnClickListener {
+            val mIntent = Intent()
+            mIntent.putParcelableArrayListExtra(EXTRA_RESULT, mResultList)
+            setResult(Activity.RESULT_OK, mIntent)
+            finish()
+        }
     }
+
 
     //读取 内存卡中图片
     private fun initImageList() {
         //id：在回调中根据 id 判断要加载那些图片
         LoaderManager.getInstance(this).initLoader(LOADER_TYPE, null, mLoaderCallback)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun exchangViewShow() {
+        //
+
+        select_preview.isEnabled = mResultList!!.size > 0
+        select_preview.setOnClickListener {
+            //图片预览
+        }
+
+        select_num.text = "${mResultList!!.size} / $mMaxCount"
     }
 
 
@@ -168,9 +180,12 @@ class SelectImageActivity : BaseSkinActivity() {
      * @param images
      */
     private fun showImageList(images: ArrayList<Uri?>) {
-        mResultList?.clear()
-        mResultList?.addAll(images)
-        selectImageListAdapter.notifyDataSetChanged()
+        image_list_rv.layoutManager = GridLayoutManager(this, 4)
+        if (selectImageListAdapter == null) {
+            selectImageListAdapter = SelectImageListAdapter(images, mResultList!!)
+        }
+        image_list_rv.itemAnimator = null
+        image_list_rv.adapter = selectImageListAdapter
     }
 
     override fun initView() {
@@ -187,31 +202,10 @@ class SelectImageActivity : BaseSkinActivity() {
     }
 
 
-    fun addBitmapToAlbum(bitmap: Bitmap, displayName: String, mimeType: String, compressFormat: Bitmap.CompressFormat) {
-        val values = ContentValues()
-        values.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
-        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM)
-        } else {
-            values.put(MediaStore.MediaColumns.DATA, "${Environment.getExternalStorageDirectory().path}/${Environment.DIRECTORY_DCIM}/$displayName")
-        }
-        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-//        val openFile = contentResolver.openFile()
-        if (uri != null) {
-            val outputStream = contentResolver.openOutputStream(uri)
-            if (outputStream != null) {
-                bitmap.compress(compressFormat, 100, outputStream)
-                outputStream.close()
-            }
-        }
-    }
-
-
-    class SelectImageListAdapter(val images: ArrayList<Uri?>) :
+    inner class SelectImageListAdapter(val images: ArrayList<Uri?>, val result: ArrayList<Uri?>) :
         RecyclerView.Adapter<SelectImageListAdapter.ViewHolder>() {
 
-        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val image = view.findViewById<AppCompatImageView>(R.id.image)
             val selectImage = view.findViewById<AppCompatImageView>(R.id.media_selected_indicator)
             val camera_ll = view.findViewById<LinearLayoutCompat>(R.id.camera_ll)
@@ -246,14 +240,30 @@ class SelectImageActivity : BaseSkinActivity() {
                     .load(path)
                     .into(holder.image)
 
-                holder.image.setOnClickListener {
+                if (result.contains(path)) {
                     holder.selectImage.setImageResource(R.drawable.media_chooser_ic_selected)
+                    holder.selectImage.isSelected = true
+                } else {
+                    holder.selectImage.setImageResource(R.drawable.media_chooser_ic_unselected)
+                    holder.selectImage.isSelected = false
+                }
+
+                holder.image.setOnClickListener {
+
+                    if (result.contains(path)) {
+                        result.remove(path)
+                    } else {
+                        if (result.size >= mMaxCount) {
+                            Toast.makeText(this@SelectImageActivity, "超过最大设置", Toast.LENGTH_LONG)
+                                .show()
+                            return@setOnClickListener
+                        }
+                        result.add(path)
+                    }
+                    exchangViewShow()
+                    notifyItemChanged(position)
                 }
             }
         }
-
-
     }
-
-
 }
