@@ -47,6 +47,23 @@
         android:text="开启服务"
         android:textColor="@color/main_bg_color" />
 
+    <Button
+        android:id="@+id/start_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="添加事件"
+        android:textColor="@color/main_bg_color" />
+
+    <Button
+        android:id="@+id/send_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="发送事件"
+        android:textColor="@color/main_bg_color" />
 
     <ImageView
         android:id="@+id/test_iv"

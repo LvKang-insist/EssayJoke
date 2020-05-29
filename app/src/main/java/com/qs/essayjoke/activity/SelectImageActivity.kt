@@ -57,8 +57,7 @@ class SelectImageActivity : BaseSkinActivity() {
     }
 
     //单选或者多选
-    var mMode =
-        MODE_MULTI
+    var mMode = MODE_MULTI
 
     //是否显示拍照按钮
     var mShowCamera = true

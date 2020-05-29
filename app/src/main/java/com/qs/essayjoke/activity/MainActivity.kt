@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import com.qs.baselibrary.dialog.ToastDialog
 import com.qs.baselibrary.dialog.base.FastDialog
 import com.qs.baselibrary.ioc.OnClick
@@ -38,9 +40,27 @@ class MainActivity : BaseSkinActivity() {
     @OnClick([R.id.test_start])
     fun onStart(view: View) {
         //跳转
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, TestActivity::class.java))
+        finish()
     }
 
+
+    @OnClick([R.id.start_add])
+    fun add(view: View) {
+        LiveDataBus.with().observe(this, Observer {
+            Log.e("------->", "我是消息")
+        })
+    }
+
+    override fun onDestroy() {
+        Log.e("------->", "销毁")
+        super.onDestroy()
+    }
+
+    @OnClick([R.id.send_event])
+    fun sendEvent() {
+        LiveDataBus.with().postValue(Any())
+    }
 
     override fun changeSkin(skinResource: SkinResource) {
         Toast.makeText(this, "换", Toast.LENGTH_LONG).show()

@@ -24,12 +24,13 @@ class TestActivity : BaseSkinActivity() {
     }
 
     private fun selectOnClick(view: View) {
-        val intent = Intent(this, SelectImageActivity::class.java)
+      /*  val intent = Intent(this, SelectImageActivity::class.java)
         intent.putExtra(SelectImageActivity.EXTRA_SELECT_COUNT, 9)
         intent.putExtra(SelectImageActivity.EXTRA_SELECT_MODE, SelectImageActivity.MODE_MULTI)
         intent.putParcelableArrayListExtra(SelectImageActivity.EXTRA_DEFAULT_SELECTED_LIST, images)
         intent.putExtra(SelectImageActivity.EXTRA_SHOW_CAMERA, true)
-        startActivityForResult(intent, 0)
+        startActivityForResult(intent, 0)*/
+        LiveDataBus.with().postValue(Any())
     }
 
     override fun initData() {
