@@ -72,7 +72,6 @@ class MainActivity : BaseSkinActivity() {
     }
 
     override fun initTitle() {
-
     }
 
     override fun initView() {
@@ -81,18 +80,19 @@ class MainActivity : BaseSkinActivity() {
 
 
     override fun initData() {
-        val dialog = FastDialog.Builder(this)
+
+       /* val dialog = FastDialog.Builder(this)
             .setContentView(R.layout.dialog)
             .setText(R.id.dialog_text, "发送")
             .setWidth(0.7f)
-            .show()
+            .show()*/
 
-        val edit = dialog.getView<AppCompatEditText>(R.id.dialog_edit)
+        /*val edit = dialog.getView<AppCompatEditText>(R.id.dialog_edit)
         dialog.setOnClickListener(R.id.dialog_text) {
             dialog.dismiss()
             Toast.makeText(this, edit?.text.toString(), Toast.LENGTH_LONG).show()
         }
-        ToastDialog.warn(this)
+        ToastDialog.warn(this)*/
     }
 }
 

@@ -1,5 +1,6 @@
 package com.qs.essayjoke.activity
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentUris
@@ -21,6 +22,7 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.permissionx.guolindev.PermissionX
 import com.qs.essayjoke.R
 import com.qs.framelibrary.BaseSkinActivity
 import kotlinx.android.synthetic.main.activity_image_selector.*
@@ -200,6 +202,11 @@ class SelectImageActivity : BaseSkinActivity() {
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+    }
+
 
     inner class SelectImageListAdapter(val images: ArrayList<Uri?>, val result: ArrayList<Uri?>) :
         RecyclerView.Adapter<SelectImageListAdapter.ViewHolder>() {
@@ -228,6 +235,19 @@ class SelectImageActivity : BaseSkinActivity() {
                 holder.camera_ll.visibility = View.VISIBLE
                 holder.image.visibility = View.GONE
                 holder.selectImage.visibility = View.GONE
+                holder.camera_ll.setOnClickListener {
+                    //拍照
+                    PermissionX.init(this@SelectImageActivity)
+                        .permissions(Manifest.permission.CAMERA)
+                        .request { allGranted, grantedList, deniedList ->
+                            if (allGranted) {
+                                //拍照
+
+                            } else {
+                                //没有权限
+                            }
+                        }
+                }
             } else {
                 holder.image.visibility = View.VISIBLE
                 holder.selectImage.visibility = View.VISIBLE

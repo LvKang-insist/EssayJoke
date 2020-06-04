@@ -62,7 +62,6 @@ abstract class BaseSkinActivity : BaseActivity(),
         //2，析属性 src  textColor background 自定义属性
         //一个 activity 对应多个 SkinView
         if (view != null) {
-            Log.e("BaseSkinActivity ->", name)
             val skinAttrs: List<SkinAttr> = SkinAttrSupport.getSkinAttrs(context, attrs)
             val skinView = SkinView(view, skinAttrs)
             //3，统一交给 SkinManager 管理
